@@ -1,0 +1,26 @@
+{
+  "name": "nfc-mongodb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@joi/date": "^2.1.1",
+    "cloudinary": "^1.21.0",
+    "cors": "^2.8.5",
+    "dicom-parser": "^1.8.21",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "mongoose": "^8.10.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nfc-mongodb": "file:"
+  }
+}
