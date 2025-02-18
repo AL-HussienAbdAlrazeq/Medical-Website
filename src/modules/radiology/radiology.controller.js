@@ -1,3 +1,4 @@
+import Citizen from "../../Database/models/citizen.model.js";
 import Radiology from "../../Database/models/radiology.model.js";
 import { asyncHandler } from "../../utils/errors/error.response.js";
 import { cloud } from "../../utils/multer/cloudinary.multer.js";
@@ -13,6 +14,11 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloud.uploader.upload(file.path);
     images.push({ secure_url, public_id });
   }
+  const citizen = await Citizen.findOne(citizenNid)
+  if(citizen.national_ID !== citizenNid){
+      return next(new Error("In-valid National ID" , {cause:404}))
+  }
+  
 
   const newRadiology = await Radiology.create({
     citizenNid,
