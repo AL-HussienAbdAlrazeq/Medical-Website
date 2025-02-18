@@ -14,7 +14,7 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloud.uploader.upload(file.path);
     images.push({ secure_url, public_id });
   }
-  const citizen = await Citizen.findOne({national_ID})
+  const citizen = await Citizen.findOne({citizenNid})
   if(citizen.national_ID !== citizenNid){
       return next(new Error("In-valid National ID" , {cause:404}))
   }
