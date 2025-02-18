@@ -20,7 +20,7 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
   }
 
   const newRadiology = await Radiology.create({
-    citizenNid,
+    citizenNid: citizen.national_ID,
     radiology_type,
     radiologistNotes,
     radiology_date,
