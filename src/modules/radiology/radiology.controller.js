@@ -14,9 +14,15 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloud.uploader.upload(file.path);
     images.push({ secure_url, public_id });
   }
-  const citizen = await Citizen.findOne({citizenNid})
-  if(citizen.national_ID !== citizenNid){
-      return next(new Error("In-valid National ID" , {cause:404}))
+  const citizen = await Citizen.findOne({ citizenNid });
+
+  // Check if citizen exists before accessing properties
+  if (!citizen) {
+    return next(new Error("Citizen not found", { cause: 404 }));
+  }
+
+  if (citizen.national_ID !== citizenNid) {
+    return next(new Error("Invalid National ID", { cause: 404 }));
   }
 
 
