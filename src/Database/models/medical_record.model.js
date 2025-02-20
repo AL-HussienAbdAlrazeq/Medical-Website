@@ -16,7 +16,9 @@ const medicalRecordSchema = new mongoose.Schema(
     },
     clinic_name:{
       type:String,
-      required:true
+      required:true,
+      trim:true,
+      unique:true
     },
     clinic_code:{
       type:Number,
