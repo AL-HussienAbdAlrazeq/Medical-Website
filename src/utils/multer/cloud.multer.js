@@ -63,7 +63,7 @@
 import multer from "multer";
 
 export const fileTypes = {
-    image: ['image/jpeg', 'image/png', 'image/gif'],
+    image: ['image/jpeg', 'image/png', 'image/gif', "image/dcm", "image/dicom", "application/dicom"],
     document: ['application/pdf', 'application/msword']
 };
 

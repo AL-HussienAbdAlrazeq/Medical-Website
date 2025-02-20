@@ -6,7 +6,7 @@ import { cloud } from "../../utils/multer/cloudinary.multer.js";
 
 // Create Radiology (Supports Multiple Images)
 export const createRadiology = asyncHandler(async (req, res, next) => {
-  const { citizenNid, radiology_type, radiologistNotes, radiology_date } = req.body;
+  const { citizenNid, radiology_type, radiologistNotes, radiology_date, citizen_id } = req.body;
 
   let images = [];
 
@@ -18,9 +18,13 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
   if (!citizen) {
     return next(new Error("Citizen Not Found", { cause: 404 }))
   }
+  if (citizen._id != citizen_id) {
+    return next(new Error("Citizen Not Found or in-valid ID ", { cause: 404 }))
+  }
 
   const newRadiology = await Radiology.create({
     citizenNid: citizen.national_ID,
+    citizen_id: citizen._id,
     radiology_type,
     radiologistNotes,
     radiology_date,
@@ -33,7 +37,9 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
 
 // Get All Radiology Records
 export const findAllRadiology = asyncHandler(async (req, res, next) => {
-  const radiologyRecords = await Radiology.find();
+  const radiologyRecords = await Radiology.find()
+    .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
+    .select('-createdAt -updatedAt -__v');;
   return res.status(200).json({ message: "Radiology Records Fetched Successfully", data: radiologyRecords });
 });
 
@@ -41,7 +47,9 @@ export const findAllRadiology = asyncHandler(async (req, res, next) => {
 //  Get Single Radiology Record by ID
 export const findRadiologyByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const radiology = await Radiology.findById(id);
+  const radiology = await Radiology.findById(id)
+    .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
+    .select('-createdAt -updatedAt -__v');;
 
   if (!radiology) {
     return next(new Error("Radiology not found", { cause: 404 }));

@@ -33,6 +33,7 @@ export const createRadiologyValidation = joi
         "string.pattern.base": "Nid must contain only numbers.",
         "any.required": "Nid is required."
       }).required(),
+    citizen_id: joi.string().custom(isValidObjectId).required()
   })
   .required();
 

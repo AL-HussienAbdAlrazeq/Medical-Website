@@ -26,6 +26,11 @@ const radiologySchema = new mongoose.Schema(
       ref: "Citizen",
       required: true,
     },
+    citizen_id: {
+      type: mongoose.Schema.Types.ObjectId, // Reference to Citizen model using Nid
+      ref: "Citizen",
+      required: true,
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
