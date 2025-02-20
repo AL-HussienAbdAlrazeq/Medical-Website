@@ -33,7 +33,7 @@ export const createCitizenValidation = Joi.object({
     'any.required': 'Address is required.',
   }),
   blood_type: Joi.string()
-    .valid('A', 'B', 'AB', 'O')
+    .valid('A', 'B', 'AB', 'O', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+', 'O-', 'O+')
     .required()
     .messages({
       'string.base': 'Blood type must be a string.',
