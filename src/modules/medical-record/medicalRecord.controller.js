@@ -38,7 +38,7 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
 
 
 export const findMedicalRecord = asyncHandler(async (req, res, next) => {
-  const medicalRecords = await MedicalRecord.find().populate('citizen_id');
+  const medicalRecords = await MedicalRecord.find().populate('citizen_id').select('-createdAt -updatedAt -__v');
   return res.status(200).json({
     message: "Medical Records Retrieved Successfully",
     medicalRecords,
