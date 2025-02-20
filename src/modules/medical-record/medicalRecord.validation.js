@@ -20,8 +20,9 @@ export const createMedicalRecordValidation = joi
         "string.pattern.base": "Nid must contain only numbers.",
         "any.required": "Nid is required."
       }).required(),
-      clinic_name:joi.string().required(),
-      clinic_code:joi.number().required(),
+    clinic_name: joi.string().required(),
+    clinic_code: joi.number().required(),
+    id: joi.string().custom(isValidObjectId).required()
 
   })
   .required();
@@ -33,6 +34,6 @@ export const updateMedicalRecordValidation = joi
     treatment: joi.string().min(3).max(1000).required(),
     diagnosis: joi
       .string().required(),
-   id: joi.string().custom(isValidObjectId).required()
+    id: joi.string().custom(isValidObjectId).required()
   })
   .required();
