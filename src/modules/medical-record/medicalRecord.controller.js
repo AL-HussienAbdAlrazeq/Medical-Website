@@ -5,19 +5,19 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { treatment, diagnosis, record_date, citizenNid , citizen_id , clinic_name , clinic_code } = req.body;
+  const { treatment, diagnosis, record_date, citizenNid, citizen_id, clinic_name, clinic_code } = req.body;
 
   if (!citizenNid) {
     return next(new Error("Citizen Not Found"));
   }
 
-  const citizen = await Citizen.findOne({ national_ID: citizenNid});
- 
-  if (!citizen ) {
+  const citizen = await Citizen.findOne({ national_ID: citizenNid });
+
+  if (!citizen) {
     return next(new Error("Citizen does not exist or invalid ID"));
   }
-  
-  if(citizen._id != citizen_id){
+
+  if (citizen._id != citizen_id) {
     return next(new Error("Citizen does not exist or invalid ID"));
   }
   const medicalRecord = await MedicalRecord.create({
@@ -25,7 +25,7 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
     diagnosis,
     record_date,
     citizenNid: citizen.national_ID, // Reference to the Citizen
-    citizen_id:citizen._id,
+    citizen_id: citizen._id,
     clinic_name,
     clinic_code
   });
@@ -38,7 +38,9 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
 
 
 export const findMedicalRecord = asyncHandler(async (req, res, next) => {
-  const medicalRecords = await MedicalRecord.find().populate('citizen_id').select('-createdAt -updatedAt -__v');
+  const medicalRecords = await MedicalRecord.find()
+    .populate('citizenId', 'full_name national_ID address') // Select specific fields
+    .select('-createdAt -updatedAt -__v');
   return res.status(200).json({
     message: "Medical Records Retrieved Successfully",
     medicalRecords,
