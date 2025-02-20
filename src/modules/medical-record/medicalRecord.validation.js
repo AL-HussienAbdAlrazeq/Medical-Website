@@ -22,7 +22,7 @@ export const createMedicalRecordValidation = joi
       }).required(),
     clinic_name: joi.string().required(),
     clinic_code: joi.number().required(),
-    id: joi.string().custom(isValidObjectId).required()
+    citizen_id: joi.string().custom(isValidObjectId).required()
 
   })
   .required();
