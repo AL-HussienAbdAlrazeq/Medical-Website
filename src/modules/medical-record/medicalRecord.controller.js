@@ -11,17 +11,21 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
     return next(new Error("Citizen Not Found"));
   }
 
-  const citizen = await Citizen.findOne({ national_ID: citizenNid , _id : citizen_id });
-  if (!citizen) {
+  const citizen = await Citizen.findOne({ national_ID: citizenNid});
+ 
+  if (!citizen ) {
     return next(new Error("Citizen does not exist or invalid ID"));
   }
-
+  
+  if(citizen._id != citizen_id){
+    return next(new Error("Citizen does not exist or invalid ID"));
+  }
   const medicalRecord = await MedicalRecord.create({
     treatment,
     diagnosis,
     record_date,
     citizenNid: citizen.national_ID, // Reference to the Citizen
-    citizen_id,
+    citizen_id:citizen._id,
     clinic_name,
     clinic_code
   });
