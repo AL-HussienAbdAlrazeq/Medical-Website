@@ -5,13 +5,13 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { treatment, diagnosis, record_date, citizenNid } = req.body;
+  const { treatment, diagnosis, record_date, citizenNid , id , clinic_name , clinic_code } = req.body;
 
   if (!citizenNid) {
     return next(new Error("Citizen Not Found"));
   }
 
-  const citizen = await Citizen.findOne({ national_ID: citizenNid });
+  const citizen = await Citizen.findOne({ national_ID: citizenNid , _id : id });
   if (!citizen) {
     return next(new Error("Citizen does not exist"));
   }
@@ -21,6 +21,9 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
     diagnosis,
     record_date,
     citizenNid: citizen.national_ID, // Reference to the Citizen
+    id,
+    clinic_name,
+    clinic_code
   });
 
   return res.status(201).json({
@@ -31,7 +34,7 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
 
 
 export const findMedicalRecord = asyncHandler(async (req, res, next) => {
-  const medicalRecords = await MedicalRecord.find();
+  const medicalRecords = await MedicalRecord.find().populate('citizen_id');
   return res.status(200).json({
     message: "Medical Records Retrieved Successfully",
     medicalRecords,
@@ -41,12 +44,11 @@ export const findMedicalRecord = asyncHandler(async (req, res, next) => {
 
 export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const medicalRecord = await MedicalRecord.findById(id);
+  const medicalRecord = await MedicalRecord.findById(id).populate('citizen_id');
 
   if (!medicalRecord) {
     return next(new Error("Medical Record not found", { cause: 404 }));
   }
-
   return res.status(200).json({
     message: "Medical Record Retrieved Successfully",
     medicalRecord,

@@ -4,7 +4,7 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 import { cloud } from "../../utils/multer/cloudinary.multer.js";
 
 
-// ✅ Create Radiology (Supports Multiple Images)
+// Create Radiology (Supports Multiple Images)
 export const createRadiology = asyncHandler(async (req, res, next) => {
   const { citizenNid, radiology_type, radiologistNotes, radiology_date } = req.body;
 
@@ -31,14 +31,14 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
 });
 
 
-// ✅ Get All Radiology Records
+// Get All Radiology Records
 export const findAllRadiology = asyncHandler(async (req, res, next) => {
   const radiologyRecords = await Radiology.find();
   return res.status(200).json({ message: "Radiology Records Fetched Successfully", data: radiologyRecords });
 });
 
 
-// ✅ Get Single Radiology Record by ID
+//  Get Single Radiology Record by ID
 export const findRadiologyByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const radiology = await Radiology.findById(id);
@@ -51,7 +51,7 @@ export const findRadiologyByID = asyncHandler(async (req, res, next) => {
 });
 
 
-// ✅ Update Radiology Record
+//  Update Radiology Record
 export const updateRadiology = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   let images = []
@@ -75,7 +75,7 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
 });
 
 
-// ✅ Delete Radiology Record
+//  Delete Radiology Record
 export const deleteRadiology = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 

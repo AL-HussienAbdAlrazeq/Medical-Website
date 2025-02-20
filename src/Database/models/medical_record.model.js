@@ -14,8 +14,21 @@ const medicalRecordSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    clinic_name:{
+      type:String,
+      required:true
+    },
+    clinic_code:{
+      type:Number,
+      required:true
+    },
     citizenNid: {
-      type: mongoose.Schema.Types.String, // Nid is a string
+      type: mongoose.Schema.Types.String, // National_ID is a string
+      ref: "Citizen", // Reference to Citizen model
+      required: true,
+    },
+    citizen_id: {
+      type: mongoose.Schema.Types.ObjectId, // National_ID is a string
       ref: "Citizen", // Reference to Citizen model
       required: true,
     },

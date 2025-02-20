@@ -20,6 +20,9 @@ export const createMedicalRecordValidation = joi
         "string.pattern.base": "Nid must contain only numbers.",
         "any.required": "Nid is required."
       }).required(),
+      clinic_name:joi.string().required(),
+      clinic_code:joi.number().required(),
+
   })
   .required();
 
