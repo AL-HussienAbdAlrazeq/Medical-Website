@@ -7,7 +7,7 @@ const citizenRouter = Router()
 
 citizenRouter.post('/create-citizen', validation(createCitizenValidation), createCitizen)
 citizenRouter.get('/', findAllCitizen)
-citizenRouter.get('/:id', findCitizenByID)
+citizenRouter.get('/search', findCitizenByID)
 citizenRouter.patch('/update-citizen/:id', validation(updateCitizenValidation), updateCitizen)
 citizenRouter.delete('/delete-citizen/:id', deleteCitizen)
 
