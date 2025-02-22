@@ -32,6 +32,19 @@ export const findAllCitizen = asyncHandler(async (req, res, next) => {
 
 
 export const findCitizenByID = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const citizen = await Citizen.findById(id);
+
+  if (!citizen) {
+    return next(new Error("Citizen not found"));
+  }
+
+  return res.status(200).json({ message: "Citizen Retrieved Successfully", citizen });
+});
+
+
+
+export const findCitizenNationalID = asyncHandler(async (req, res, next) => {
 
   const { national_ID } = req.query
 
@@ -47,6 +60,7 @@ export const findCitizenByID = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({ message: "Citizen Retrieved Successfully", citizen });
 });
+
 
 
 export const updateCitizen = asyncHandler(async (req, res, next) => {
