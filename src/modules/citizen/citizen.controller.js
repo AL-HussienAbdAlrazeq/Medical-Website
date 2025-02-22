@@ -26,14 +26,20 @@ export const createCitizen = asyncHandler(async (req, res, next) => {
 
 
 export const findAllCitizen = asyncHandler(async (req, res, next) => {
-  const citizens = await Citizen.find(); 
+  const citizens = await Citizen.find();
   return res.status(200).json({ message: "Citizens Retrieved Successfully", citizens });
 });
 
 
 export const findCitizenByID = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const citizen = await Citizen.findById(id); 
+
+  const { national_ID } = req.query
+
+  if (!national_ID) {
+    return res.status(400).json({ message: 'National ID is required' });
+  }
+
+  const citizen = await Citizen.findOne({ national_ID });
 
   if (!citizen) {
     return next(new Error("Citizen not found"));
@@ -45,7 +51,7 @@ export const findCitizenByID = asyncHandler(async (req, res, next) => {
 
 export const updateCitizen = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const citizen = await Citizen.findByIdAndUpdate(id, req.body, { new: true }); 
+  const citizen = await Citizen.findByIdAndUpdate(id, req.body, { new: true });
 
   if (!citizen) {
     return next(new Error("Citizen not found"));
@@ -57,7 +63,7 @@ export const updateCitizen = asyncHandler(async (req, res, next) => {
 
 export const deleteCitizen = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const citizen = await Citizen.findByIdAndDelete(id); 
+  const citizen = await Citizen.findByIdAndDelete(id);
 
   if (!citizen) {
     return next(new Error("Citizen not found"));
