@@ -17,15 +17,15 @@ const radiologySchema = new mongoose.Schema(
         public_id: String,
       },
     ],
-    radiology_date: {
-      type: Date,
-      default: Date.now,
-    },
-    citizenNid: {
-      type: mongoose.Schema.Types.String, // Reference to Citizen model using Nid
-      ref: "Citizen",
-      required: true,
-    },
+    // radiology_date: {
+    //   type: Date,
+    //   default: Date.now,
+    // },
+    // citizenNid: {
+    //   type: mongoose.Schema.Types.String, // Reference to Citizen model using Nid
+    //   ref: "Citizen",
+    //   required: true,
+    // },
     citizen_id: {
       type: mongoose.Schema.Types.ObjectId, // Reference to Citizen model using Nid
       ref: "Citizen",
@@ -33,7 +33,7 @@ const radiologySchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: { createdAt: "radiology_date", updatedAt: "modified_on" },// Adds createdAt and updatedAt fields
   }
 );
 

@@ -3,9 +3,10 @@ import { createCitizen, deleteCitizen, findAllCitizen, findCitizenByID, findCiti
 import { validation } from "../../middleware/validation.middleware.js";
 import { createCitizenValidation, updateCitizenValidation } from "./citizen.validation.js";
 
+
 const citizenRouter = Router()
 
-citizenRouter.post('/create-citizen', validation(createCitizenValidation), createCitizen)
+citizenRouter.post('/create-citizen',validation(createCitizenValidation), createCitizen)
 citizenRouter.get('/', findAllCitizen)
 citizenRouter.get('/search', findCitizenNationalID)
 citizenRouter.get('/:id', findCitizenByID)

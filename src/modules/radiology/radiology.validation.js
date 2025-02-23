@@ -23,16 +23,16 @@ export const createRadiologyValidation = joi
       path: joi.string(),
       size: joi.number(),
     }).required(),
-    radiology_date: schema,
-    citizenNid: joi.string()
-      .length(14) // Ensure exactly 14 characters
-      .required()
-      .messages({
-        "string.base": "Nid must be a string.",
-        "string.length": "Nid must be exactly 14 digits.",
-        "string.pattern.base": "Nid must contain only numbers.",
-        "any.required": "Nid is required."
-      }).required(),
+    // radiology_date: schema,
+    // citizenNid: joi.string()
+    //   .length(14) // Ensure exactly 14 characters
+    //   .required()
+    //   .messages({
+    //     "string.base": "Nid must be a string.",
+    //     "string.length": "Nid must be exactly 14 digits.",
+    //     "string.pattern.base": "Nid must contain only numbers.",
+    //     "any.required": "Nid is required."
+    //   }).required(),
     citizen_id: joi.string().custom(isValidObjectId).required()
   })
   .required();

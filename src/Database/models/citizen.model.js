@@ -12,10 +12,12 @@ const citizenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    address: {
-      type: String,
-      required: true,
-    },
+    address: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     blood_type: {
       type: String,
       required: true,

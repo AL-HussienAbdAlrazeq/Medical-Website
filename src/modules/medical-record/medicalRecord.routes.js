@@ -2,6 +2,7 @@ import { Router } from "express";
 import { validation } from "../../middleware/validation.middleware.js";
 import { createMedicalRecord, deleteMedicalRecord, findMedicalRecord, findMedicalRecordByID, updateMedicalRecord } from "./medicalRecord.controller.js";
 import { createMedicalRecordValidation, updateMedicalRecordValidation } from "./medicalRecord.validation.js";
+import { authenticate, authorizeRoles } from "../../middleware/auth.middleware.js";
 
 const medicalRecordRouter = Router()
 

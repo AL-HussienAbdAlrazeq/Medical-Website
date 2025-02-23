@@ -6,7 +6,7 @@ import { cloud } from "../../utils/multer/cloudinary.multer.js";
 
 // Create Radiology (Supports Multiple Images)
 export const createRadiology = asyncHandler(async (req, res, next) => {
-  const { citizenNid, radiology_type, radiologistNotes, radiology_date, citizen_id } = req.body;
+  const { radiology_type, radiologistNotes, radiology_date, citizen_id } = req.body;
 
   let images = [];
 
@@ -14,16 +14,16 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloud.uploader.upload(file.path);
     images.push({ secure_url, public_id });
   }
-  const citizen = await Citizen.findOne({ national_ID: citizenNid })
+  const citizen = await Citizen.findOne({ _id: citizen_id });
+
   if (!citizen) {
-    return next(new Error("Citizen Not Found", { cause: 404 }))
-  }
-  if (citizen._id != citizen_id) {
-    return next(new Error("Citizen Not Found or in-valid ID ", { cause: 404 }))
+    return next(new Error("Citizen does not exist or invalid ID"));
   }
 
+  if (citizen._id != citizen_id) {
+    return next(new Error("Citizen does not exist or invalid ID"));
+  }
   const newRadiology = await Radiology.create({
-    citizenNid: citizen.national_ID,
     citizen_id: citizen._id,
     radiology_type,
     radiologistNotes,
@@ -39,7 +39,8 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
 export const findAllRadiology = asyncHandler(async (req, res, next) => {
   const radiologyRecords = await Radiology.find()
     .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-    .select('-createdAt -updatedAt -__v');;
+    .select('-createdAt -updatedAt -__v');// Select specific fields
+
   return res.status(200).json({ message: "Radiology Records Fetched Successfully", data: radiologyRecords });
 });
 
@@ -49,7 +50,8 @@ export const findRadiologyByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const radiology = await Radiology.findById(id)
     .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-    .select('-createdAt -updatedAt -__v');;
+    .select('-createdAt -updatedAt -__v');
+
 
   if (!radiology) {
     return next(new Error("Radiology not found", { cause: 404 }));

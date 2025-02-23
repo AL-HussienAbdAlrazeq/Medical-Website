@@ -11,15 +11,15 @@ export const createMedicalRecordValidation = joi
   .keys({
     treatment: joi.array().items(joi.string()).required(),
     diagnosis: joi.array().items(joi.string()).required(),
-    citizenNid: joi.string()
-      .length(14) // Ensure exactly 14 characters
-      .required()
-      .messages({
-        "string.base": "Nid must be a string.",
-        "string.length": "Nid must be exactly 14 digits.",
-        "string.pattern.base": "Nid must contain only numbers.",
-        "any.required": "Nid is required."
-      }).required(),
+    // citizenNid: joi.string()
+    //   .length(14) // Ensure exactly 14 characters
+    //   .required()
+    //   .messages({
+    //     "string.base": "Nid must be a string.",
+    //     "string.length": "Nid must be exactly 14 digits.",
+    //     "string.pattern.base": "Nid must contain only numbers.",
+    //     "any.required": "Nid is required."
+    //   }).required(),
     clinic_name: joi.string().required(),
     clinic_code: joi.number().required(),
     citizen_id: joi.string().custom(isValidObjectId).required()

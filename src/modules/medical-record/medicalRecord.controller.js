@@ -5,13 +5,9 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { treatment, diagnosis, record_date, citizenNid, citizen_id, clinic_name, clinic_code } = req.body;
+  const { treatment, diagnosis, record_date, citizen_id, clinic_name, clinic_code } = req.body;
 
-  if (!citizenNid) {
-    return next(new Error("Citizen Not Found"));
-  }
-
-  const citizen = await Citizen.findOne({ national_ID: citizenNid });
+  const citizen = await Citizen.findOne({ _id: citizen_id });
 
   if (!citizen) {
     return next(new Error("Citizen does not exist or invalid ID"));
@@ -24,7 +20,6 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
     treatment,
     diagnosis,
     record_date,
-    citizenNid: citizen.national_ID, // Reference to the Citizen
     citizen_id: citizen._id,
     clinic_name,
     clinic_code
@@ -50,7 +45,9 @@ export const findMedicalRecord = asyncHandler(async (req, res, next) => {
 
 export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const medicalRecord = await MedicalRecord.findById(id).populate('citizen_id');
+  const medicalRecord = await MedicalRecord.findById(id)
+    .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
+    .select('-createdAt -updatedAt -__v');;
 
   if (!medicalRecord) {
     return next(new Error("Medical Record not found", { cause: 404 }));

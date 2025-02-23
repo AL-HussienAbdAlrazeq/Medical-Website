@@ -1,20 +1,30 @@
-import { asyncHandler } from "../utils/response/error.response.js";
-import { decodedToken } from "../utils/security/token.security.js";
 
-export const authentication = () => {
-  return asyncHandler(async (req, res, next) => {
-    const { authorization } = req.headers;
-    const user = await decodedToken({ authorization, next });
-    req.user = user;
-    return next();
-  });
+
+import jwt from "jsonwebtoken";
+
+export const authenticate = (req, res, next) => {
+  const token = req.header("Authorization")?.split(" ")[1]; // Extract token from header
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'D2565A25C55F597F');
+    req.user = decoded; // ✅ Store the decoded token (including role) in req.user
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+  }
 };
 
-export const authorization = (access_Roles = []) => {
-  return asyncHandler(async (req, res, next) => {
-    if (!access_Roles.includes(req.user.role)) {
-      return next(new Error("Not Authorized Account", { cause: 403 }));
+
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return res.status(401).json({ message: "Unauthorized Role" });
     }
-    return next();
-  });
+    next(); 
+  };
 };
+
