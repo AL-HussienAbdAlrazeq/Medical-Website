@@ -6,12 +6,18 @@ import { isValidObjectId } from "mongoose";
 const Joi = JoiBase.extend(JoiDate);
 
 const schema = Joi.date().format('YYYY-MM-DD').utc().required();
+
 export const createRadiologyValidation = joi
   .object()
   .keys({
-    radiology_type: joi.string(),
+    radiology_type: joi.string().optional().messages({
+      "string.base": "Radiology type must be a string",
+    }),
 
-    radiologistNotes: joi.string().min(3).max(1000).required(),
+    radiologistNotes: joi.string().min(3).max(1000).optional().messages({
+      "string.min": "Notes must be at least 3 characters",
+      "string.max": "Notes must not exceed 1000 characters",
+    }),
     file: joi.array().items({
       fieldname: joi.string(),
       originalname: joi.string(),
@@ -23,24 +29,32 @@ export const createRadiologyValidation = joi
       path: joi.string(),
       size: joi.number(),
     }).required(),
-    // radiology_date: schema,
-    // citizenNid: joi.string()
-    //   .length(14) // Ensure exactly 14 characters
-    //   .required()
-    //   .messages({
-    //     "string.base": "Nid must be a string.",
-    //     "string.length": "Nid must be exactly 14 digits.",
-    //     "string.pattern.base": "Nid must contain only numbers.",
-    //     "any.required": "Nid is required."
-    //   }).required(),
-    citizen_id: joi.string().custom(isValidObjectId).required()
+    national_ID: joi.string()
+      .length(14) // Ensure exactly 14 characters
+      .required()
+      .messages({
+        "string.base": "Nid must be a string.",
+        "string.length": "Nid must be exactly 14 digits.",
+        "string.pattern.base": "Nid must contain only numbers.",
+        "any.required": "Nid is required."
+      }).required(),
+    // citizen_id: joi.string().custom(isValidObjectId).required()
   })
   .required();
 
 
 
 export const updateRadiologyValidation = joi.object({
-  id: joi.string().custom(isValidObjectId).required(),
+  national_ID: joi.string()
+    .length(14)
+    .pattern(/^[0-9]+$/) // Must be all digits
+    .required()
+    .messages({
+      "string.base": "national_ID must be a string.",
+      "string.length": "national_ID must be exactly 14 digits.",
+      "string.pattern.base": "national_ID must contain only numbers.",
+      "any.required": "national_ID is required."
+    }),
 
   radiology_type: joi.string().optional().messages({
     "string.base": "Radiology type must be a string",
@@ -51,10 +65,6 @@ export const updateRadiologyValidation = joi.object({
     "string.max": "Notes must not exceed 1000 characters",
   }),
 
-  radiology_date: joi.date().iso().optional().messages({
-    "date.base": "Invalid date format",
-    "date.format": "Date must be in ISO format (YYYY-MM-DD)",
-  }),
 
   file: joi.array().items({
     fieldname: joi.string(),
@@ -66,5 +76,20 @@ export const updateRadiologyValidation = joi.object({
     filename: joi.string(),
     path: joi.string(),
     size: joi.number(),
-  }).required(),
+  }).optional(),
+});
+
+
+
+export const deleteRadiologyValidation = joi.object({
+  national_ID: joi.string()
+    .length(14)
+    .pattern(/^[0-9]+$/) // Must be all digits
+    .required()
+    .messages({
+      "string.base": "national_ID must be a string.",
+      "string.length": "national_ID must be exactly 14 digits.",
+      "string.pattern.base": "national_ID must contain only numbers.",
+      "any.required": "national_ID is required."
+    }),
 });

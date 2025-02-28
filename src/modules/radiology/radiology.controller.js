@@ -6,7 +6,7 @@ import { cloud } from "../../utils/multer/cloudinary.multer.js";
 
 // Create Radiology (Supports Multiple Images)
 export const createRadiology = asyncHandler(async (req, res, next) => {
-  const { radiology_type, radiologistNotes, radiology_date, citizen_id } = req.body;
+  const { radiology_type, radiologistNotes, radiology_date, national_ID } = req.body;
 
   let images = [];
 
@@ -14,17 +14,17 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloud.uploader.upload(file.path);
     images.push({ secure_url, public_id });
   }
-  const citizen = await Citizen.findOne({ _id: citizen_id });
+  const citizen = await Citizen.findOne({ national_ID });
 
   if (!citizen) {
     return next(new Error("Citizen does not exist or invalid ID"));
   }
 
-  if (citizen._id != citizen_id) {
+  if (citizen.national_ID != national_ID) {
     return next(new Error("Citizen does not exist or invalid ID"));
   }
   const newRadiology = await Radiology.create({
-    citizen_id: citizen._id,
+    national_ID,
     radiology_type,
     radiologistNotes,
     radiology_date,
@@ -47,10 +47,10 @@ export const findAllRadiology = asyncHandler(async (req, res, next) => {
 
 //  Get Single Radiology Record by ID
 export const findRadiologyByID = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const radiology = await Radiology.findById(id)
-    .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-    .select('-createdAt -updatedAt -__v');
+  const { national_ID } = req.params;
+  const radiology = await Radiology.findOne({national_ID})
+    // .populate('national_ID', 'full_name national_ID address blood_type') // Select specific fields
+    // .select('-createdAt -updatedAt -__v');
 
 
   if (!radiology) {
@@ -63,7 +63,7 @@ export const findRadiologyByID = asyncHandler(async (req, res, next) => {
 
 //  Update Radiology Record
 export const updateRadiology = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const { national_ID } = req.params;
   let images = []
   if (req.files.length) {
     for (const file of req.files) {
@@ -72,10 +72,15 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
     }
     req.body.images = images
   }
+  const radiology = await Radiology.findOne({ national_ID });
+  if (!radiology) {
+    return next(new Error("Radiology not found", { cause: 404 }));
+  }
 
-  const updatedRadiology = await Radiology.findByIdAndUpdate(id, {
-    ...req.body
-  }, { new: true });
+
+  const updatedRadiology = await Radiology.updateMany({ national_ID },
+  {$set:req.body}
+  );
 
   if (!updatedRadiology) {
     return next(new Error("Radiology not found", { cause: 404 }));
@@ -87,14 +92,12 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
 
 //  Delete Radiology Record
 export const deleteRadiology = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const { national_ID } = req.params;
 
-  const radiology = await Radiology.findById(id);
+  const radiology = await Radiology.findOne({ national_ID });
   if (!radiology) {
     return next(new Error("Radiology not found", { cause: 404 }));
   }
-
-
   // Delete images from Cloudinary
   if (radiology.images?.length) {
     await Promise.all(
@@ -102,7 +105,7 @@ export const deleteRadiology = asyncHandler(async (req, res, next) => {
     );
   }
 
-  await Radiology.findByIdAndDelete(id);
+  await Radiology.deleteMany({ national_ID });
 
   return res.status(200).json({ message: "Radiology Deleted Successfully", data: radiology });
 });
