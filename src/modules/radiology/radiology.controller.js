@@ -6,7 +6,7 @@ import { cloud } from "../../utils/multer/cloudinary.multer.js";
 
 // Create Radiology (Supports Multiple Images)
 export const createRadiology = asyncHandler(async (req, res, next) => {
-  const { radiology_type, radiologistNotes, radiology_date, national_ID } = req.body;
+  const { radiology_type, radiologistNotes, national_ID } = req.body;
 
   let images = [];
 
@@ -27,7 +27,6 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
     national_ID,
     radiology_type,
     radiologistNotes,
-    radiology_date,
     images
   });
 
