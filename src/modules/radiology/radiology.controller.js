@@ -37,8 +37,8 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
 // Get All Radiology Records
 export const findAllRadiology = asyncHandler(async (req, res, next) => {
   const radiologyRecords = await Radiology.find()
-    .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-    .select('-createdAt -updatedAt -__v');// Select specific fields
+    // .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
+    // .select('-createdAt -updatedAt -__v');// Select specific fields
 
   return res.status(200).json({ message: "Radiology Records Fetched Successfully", data: radiologyRecords });
 });
