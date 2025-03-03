@@ -37,8 +37,8 @@ export const createRadiology = asyncHandler(async (req, res, next) => {
 // Get All Radiology Records
 export const findAllRadiology = asyncHandler(async (req, res, next) => {
   const radiologyRecords = await Radiology.find()
-    // .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-    // .select('-createdAt -updatedAt -__v');// Select specific fields
+  // .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
+  // .select('-createdAt -updatedAt -__v');// Select specific fields
 
   return res.status(200).json({ message: "Radiology Records Fetched Successfully", data: radiologyRecords });
 });
@@ -47,9 +47,9 @@ export const findAllRadiology = asyncHandler(async (req, res, next) => {
 //  Get Single Radiology Record by ID
 export const findRadiologyByID = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
-  const radiology = await Radiology.findOne({national_ID})
-    // .populate('national_ID', 'full_name national_ID address blood_type') // Select specific fields
-    // .select('-createdAt -updatedAt -__v');
+  const radiology = await Radiology.findOne({ national_ID })
+  // .populate('national_ID', 'full_name national_ID address blood_type') // Select specific fields
+  // .select('-createdAt -updatedAt -__v');
 
 
   if (!radiology) {
@@ -63,29 +63,32 @@ export const findRadiologyByID = asyncHandler(async (req, res, next) => {
 //  Update Radiology Record
 export const updateRadiology = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
-  let images = []
-  if (req.files.length) {
+
+  // Handle file uploads (add images if provided)
+  let images = [];
+  if (req.files && req.files.length) {
     for (const file of req.files) {
       const { secure_url, public_id } = await cloud.uploader.upload(file.path);
       images.push({ secure_url, public_id });
     }
-    req.body.images = images
-  }
-  const radiology = await Radiology.findOne({ national_ID });
-  if (!radiology) {
-    return next(new Error("Radiology not found", { cause: 404 }));
+    req.body.images = images;  // Add to request body for update
   }
 
-
-  const updatedRadiology = await Radiology.updateMany({ national_ID },
-  {$set:req.body}
+  // Find and update the radiology record directly
+  const updatedRadiology = await Radiology.findOneAndUpdate(
+    { national_ID },            // Search condition
+    { $set: req.body },         // Update data
+    { new: true }                // Return the updated document
   );
 
   if (!updatedRadiology) {
     return next(new Error("Radiology not found", { cause: 404 }));
   }
 
-  return res.status(200).json({ message: "Radiology Updated Successfully", data: updatedRadiology });
+  return res.status(200).json({
+    message: "Radiology Updated Successfully",
+    data: updatedRadiology,
+  });
 });
 
 
@@ -93,18 +96,19 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
 export const deleteRadiology = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
 
-  const radiology = await Radiology.findOne({ national_ID });
+  // Find and delete the radiology record in one step
+  const radiology = await Radiology.findOneAndDelete({ national_ID });
+
   if (!radiology) {
     return next(new Error("Radiology not found", { cause: 404 }));
   }
-  // Delete images from Cloudinary
+
+  // If images exist, delete them from Cloudinary
   if (radiology.images?.length) {
     await Promise.all(
       radiology.images.map((image) => cloud.api.delete_resources(image.public_id))
     );
   }
-
-  await Radiology.deleteMany({ national_ID });
 
   return res.status(200).json({ message: "Radiology Deleted Successfully", data: radiology });
 });
