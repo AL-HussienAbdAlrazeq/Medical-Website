@@ -1,30 +1,44 @@
 
 
 import jwt from "jsonwebtoken";
+import Citizen from "../Database/models/citizen.model.js";
 
-export const authenticate = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1]; // Extract token from header
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
-
+export const isAuthenticate = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, 'D2565A25C55F597F');
-    req.user = decoded; // ✅ Store the decoded token (including role) in req.user
-    next();
+    // get data from req
+    const { authorization } = req.headers;
+    if (!authorization)
+      return next(new Error("token required", { cause: 401 }));
+
+    if (!authorization.startsWith("Bearer")) {
+      return res
+        .status(400)
+        .json({ success: false, message: "invalid bearer key" });
+    }
+
+    const token = authorization.split(" ")[1]; // [Bearer,token]
+
+    //  check token
+    const { email } = jwt.verify(token, process.env.SECRET_JWT);
+
+    const user = await Citizen.findOne({ email }, { password: 0 }); // {} | null
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    req.user = user;
+    return next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 
-export const authorizeRoles = (...allowedRoles) => {
+export const isAuthorized = (...roles) => {
   return (req, res, next) => {
-    if (!req.user || !allowedRoles.includes(req.user.role)) {
-      return res.status(401).json({ message: "Unauthorized Role" });
-    }
-    next(); 
+    if (!roles.includes(req.user.role))
+      return next(new Error("not authorized!", { cause: 401 }));
+    return next();
   };
 };
 

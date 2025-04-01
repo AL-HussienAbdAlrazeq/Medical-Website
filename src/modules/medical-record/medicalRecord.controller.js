@@ -46,22 +46,31 @@ export const findMedicalRecord = asyncHandler(async (req, res, next) => {
 export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
   const medicalRecord = await MedicalRecord.findOne({ national_ID })
-  // .populate('citizen_id', 'full_name national_ID address blood_type') // Select specific fields
-  // .select('-createdAt -updatedAt -__v');;
+
 
   if (!medicalRecord) {
     return next(new Error("Medical Record not found", { cause: 404 }));
   }
 
-  const citizen = await Citizen.findOne({ national_ID }).select("full_name national_ID address blood_type -_id");
+  const citizen = await Citizen.findOne({ national_ID }).select("full_name national_ID -_id");
 
   if (!citizen) {
     return next(new Error("Citizen not found", { cause: 404 }));
   }
+
+  const result = {
+    ...medicalRecord.toObject(),
+    recode_date: medicalRecord.recode_date.toISOString().split("T")[0],
+    modified_on: medicalRecord.modified_on.toISOString().split("T")[0]
+  };
+
   return res.status(200).json({
     message: "Medical Record Retrieved Successfully",
-    medicalRecord,
-    citizen
+    data: {
+      result,
+      citizen
+    }
+
   });
 });
 

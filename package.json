@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@joi/date": "^2.1.1",
+    "bcrypt": "^5.1.1",
     "cloudinary": "^1.21.0",
     "cors": "^2.8.5",
     "dicom-parser": "^1.8.21",
@@ -22,6 +23,8 @@
     "mongoose": "^8.10.0",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
-    "nfc-mongodb": "file:"
+    "nanoid": "^5.1.5",
+    "nfc-mongodb": "file:",
+    "nodemailer": "^6.10.0"
   }
 }

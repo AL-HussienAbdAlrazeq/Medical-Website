@@ -26,22 +26,20 @@ export const createCitizenValidation = Joi.object({
     'string.max': 'Full name can be up to 100 characters long.',
     'any.required': 'Full name is required.',
   }),
-  address: Joi.array()
-    .items(
-      Joi.string().min(5).max(255).required().messages({
-        "string.base": "Each address must be a string.",
-        "string.min": "Each address must be at least 5 characters long.",
-        "string.max": "Each address can be up to 255 characters long.",
-        "any.required": "Each address is required.",
-      })
-    )
-    .min(1) // At least one address required
-    .required()
-    .messages({
-      "array.base": "Address must be an array of strings.",
-      "array.min": "At least one address is required.",
-      "any.required": "Address is required.",
-    }),
+  address:
+    Joi.string().min(5).max(255).required().messages({
+      "string.base": "Each address must be a string.",
+      "string.min": "Each address must be at least 5 characters long.",
+      "string.max": "Each address can be up to 255 characters long.",
+      "any.required": "Each address is required.",
+    })
+      .min(1) // At least one address required
+      .required()
+      .messages({
+        "array.base": "Address must be an array of strings.",
+        "array.min": "At least one address is required.",
+        "any.required": "Address is required.",
+      }),
   blood_type: Joi.string()
     .valid('A', 'B', 'AB', 'O', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+', 'O-', 'O+')
     .required()
@@ -54,6 +52,10 @@ export const createCitizenValidation = Joi.object({
     'date.base': 'Birth date must be a valid date.',
     'any.required': 'Birth date is required.',
   }),
+  mobileNumber: Joi
+    .string()
+    .pattern(/^01[0125][0-9]{8}$/)
+    .required(),
 }).required();
 
 // Update Citizen Validation Schema

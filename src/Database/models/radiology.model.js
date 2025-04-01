@@ -26,6 +26,8 @@ const radiologySchema = new mongoose.Schema(
   },
   {
     timestamps: { createdAt: "radiology_date", updatedAt: "modified_on" },// Adds createdAt and updatedAt fields
+    versionKey:false
+
   }
 );
 

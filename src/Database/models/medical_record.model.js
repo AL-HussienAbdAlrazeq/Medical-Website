@@ -28,6 +28,7 @@ const medicalRecordSchema = new mongoose.Schema(
   },
   {
     timestamps: { createdAt: "recode_date", updatedAt: "modified_on" },// Adds createdAt and updatedAt fields
+    versionKey:false
   }
 );
 

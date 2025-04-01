@@ -5,13 +5,14 @@ import radiologyRouter from "./modules/radiology/radiology.routes.js";
 import cors from 'cors'
 import { globalErrorHandling } from "./utils/errors/error.response.js";
 import { DBConnection } from "./Database/DBConnection.js";
+import authRouter from "./modules/auth/auth.routes.js";
 
 export const bootstrap = (app, express) => {
   app.use(cors())
   app.use('/uploads', express.static('./src/uploads'))
   app.use(express.json());
   DBConnection()
-
+  app.use('/auth', authRouter)
   app.use("/citizens", citizenRouter)
   app.use("/medical-record", medicalRecordRouter)
   app.use('/radiology', radiologyRouter)

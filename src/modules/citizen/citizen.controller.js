@@ -4,7 +4,7 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createCitizen = asyncHandler(async (req, res, next) => {
-  const { national_ID, full_name, address, blood_type, birth_date } = req.body;
+  const { national_ID, full_name, address, blood_type, birth_date, mobileNumber } = req.body;
 
   if (!national_ID || !full_name || !address || !blood_type || !birth_date) {
     return res.status(400).json({ error: 'All fields are required' });
@@ -20,7 +20,7 @@ export const createCitizen = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ error: "Citizen with this National ID already exists." });
   }
 
-  const citizen = await Citizen.create({ national_ID, full_name, address, blood_type, birth_date });
+  const citizen = await Citizen.create({ national_ID, full_name, address, blood_type, birth_date, mobileNumber });
   return res.status(201).json({ message: "Citizen Created Successfully", citizen });
 });
 
