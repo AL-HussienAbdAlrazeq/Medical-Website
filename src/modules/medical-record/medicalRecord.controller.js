@@ -5,7 +5,7 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { treatment, diagnosis, record_date, national_ID, clinic_name, clinic_code } = req.body;
+  const { treatment, diagnosis, record_date, national_ID, clinic_name, clinic_code , status } = req.body;
 
   const citizen = await Citizen.findOne({ national_ID });
 
@@ -22,7 +22,8 @@ export const createMedicalRecord = asyncHandler(async (req, res, next) => {
     record_date,
     national_ID,
     clinic_name,
-    clinic_code
+    clinic_code,
+    status
   });
 
   return res.status(201).json({
