@@ -95,6 +95,7 @@ export const updateMedicalRecord = asyncHandler(async (req, res, next) => {
   });
 });
 
+
 export const deleteMedicalRecord = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
 
