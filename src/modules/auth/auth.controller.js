@@ -61,8 +61,9 @@ export const login = asyncHandler(async (req, res, next) => {
     return next(new Error("Invalid Account", { cause: 400 }));
   }
   const national_ID = user.national_ID
+  const role = user.role
   const token = generateToken({
-    payload: { email, national_ID },
+    payload: { email, national_ID,role },
     options: { expiresIn: "1h" },
   });
 
