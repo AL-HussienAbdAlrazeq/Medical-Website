@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const medicalRecordSchema = new mongoose.Schema(
   {
     treatment: {
-      type: [String],
+      type: String,
       required: true,
     },
     diagnosis: {
-      type: [String],
+      type: String,
       required: true,
     },
     clinic_name: {
