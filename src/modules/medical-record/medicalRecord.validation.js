@@ -9,8 +9,10 @@ const schema = Joi.date().format('YYYY-MM-DD').utc().required();
 export const createMedicalRecordValidation = joi
   .object()
   .keys({
-    treatment: joi.array().items(joi.string()).required(),
-    diagnosis: joi.array().items(joi.string()).required(),
+    // treatment: joi.array().items(joi.string()).required(),
+    // diagnosis: joi.array().items(joi.string()).required(),
+    treatment: joi.string().required(),
+    diagnosis: joi.string().required(),
     national_ID: joi.string()
       .length(14) // Ensure exactly 14 characters
       .required()
