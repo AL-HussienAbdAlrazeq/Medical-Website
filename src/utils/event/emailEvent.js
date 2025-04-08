@@ -4,6 +4,7 @@ import { generateHash } from "../security/hash.security.js";
 import { verifyAccountTemplate } from "../template/verifyAccount.template.js";
 import { sendEmail } from "../email/sendEmail.js";
 import Citizen from "../../Database/models/citizen.model.js";
+import User from "../../Database/models/user.model.js";
 export const emailEvent = new EventEmitter();
 
 const emailSubject = {
@@ -31,7 +32,7 @@ export const sendCode = async ({
     default:
       break;
   }
-  await Citizen.updateOne({ _id: id }, updateData);
+  await User.updateOne({ _id: id }, updateData);
 
   const html = verifyAccountTemplate({ code: otp });
   await sendEmail({ to: email, subject, html });

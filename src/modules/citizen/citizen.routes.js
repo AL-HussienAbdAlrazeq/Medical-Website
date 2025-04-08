@@ -3,7 +3,8 @@ import { createCitizen, deleteCitizen, findAllCitizen, findCitizenByID, findCiti
 import { validation } from "../../middleware/validation.middleware.js";
 import { createCitizenValidation, updateCitizenValidation } from "./citizen.validation.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/auth.middleware.js";
-import { roles } from "../../Database/models/citizen.model.js";
+import { roles } from "../../Database/models/user.model.js";
+
 
 
 const citizenRouter = Router()

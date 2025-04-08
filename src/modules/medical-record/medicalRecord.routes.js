@@ -3,7 +3,8 @@ import { validation } from "../../middleware/validation.middleware.js";
 import { createMedicalRecord, deleteMedicalRecord, findMedicalRecord, findMedicalRecordByID, updateMedicalRecord } from "./medicalRecord.controller.js";
 import { createMedicalRecordValidation, deleteMedicalRecordValidation, updateMedicalRecordValidation } from "./medicalRecord.validation.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/auth.middleware.js";
-import { roles } from "../../Database/models/citizen.model.js";
+import { roles } from "../../Database/models/user.model.js";
+
 
 const medicalRecordRouter = Router()
 

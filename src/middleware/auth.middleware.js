@@ -2,6 +2,7 @@
 
 import jwt from "jsonwebtoken";
 import Citizen from "../Database/models/citizen.model.js";
+import User from "../Database/models/user.model.js";
 
 export const isAuthenticate = async (req, res, next) => {
   try {
@@ -21,7 +22,7 @@ export const isAuthenticate = async (req, res, next) => {
     //  check token
     const { email } = jwt.verify(token, process.env.SECRET_JWT);
 
-    const user = await Citizen.findOne({ email }, { password: 0 }); // {} | null
+    const user = await User.findOne({ email }, { password: 0 }); // {} | null
     if (!user)
       return res
         .status(404)

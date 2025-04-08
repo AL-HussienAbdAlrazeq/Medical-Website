@@ -5,7 +5,8 @@ import { fileTypes, uploadCloudFile } from "../../utils/multer/cloud.multer.js";
 import { createRadiology, deleteRadiology, findAllRadiology, findRadiologyByID, updateRadiology } from "./radiology.controller.js";
 import { createRadiologyValidation, deleteRadiologyValidation, updateRadiologyValidation } from "./radiology.validation.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/auth.middleware.js";
-import { roles } from "../../Database/models/citizen.model.js";
+import { roles } from "../../Database/models/user.model.js";
+
 
 const radiologyRouter = Router()
 

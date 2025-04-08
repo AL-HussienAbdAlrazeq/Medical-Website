@@ -4,28 +4,31 @@
 
 import bcrypt from "bcrypt"
 
-import Citizen, { roles } from "../../Database/models/citizen.model.js";
+
 import { emailEvent } from "../../utils/event/emailEvent.js";
 import { asyncHandler } from "../../utils/response/error.response.js";
 import { successResponse } from "../../utils/response/success.response.js";
 import { compareHash, generateHash } from "../../utils/security/hash.security.js";
 import { generateToken } from "../../utils/security/token.security.js";
+import User from "../../Database/models/user.model.js";
+
 
 export const signup = asyncHandler(async (req, res, next) => {
-  const { full_name, email, password,national_ID } = req.body;
+  const { userName, email, password } = req.body;
 
-  if (await Citizen.findOne({ email })) {
+  if (await User.findOne({ email })) {
     return next(new Error("Email Exist", { cause: 409 }));
   }
   const hashPassword = generateHash({ plainText: password });
-  const user = await Citizen.create({ full_name, email, password: hashPassword, national_ID });
+  const user = await User.create({ userName, email, password: hashPassword });
   emailEvent.emit("sendConfirmEmail", { id: user._id, email });
   return successResponse({ res, status: 201, message: "Done" });
 });
 
 export const confirmEmail = asyncHandler(async (req, res, next) => {
   const { email, code } = req.body;
-  const user = await Citizen.findOne({ email });
+  
+  const user = await User.findOne({email:email})
   if (!user) {
     return next(new Error("User not found", { cause: 404 }));
   }
@@ -38,7 +41,7 @@ export const confirmEmail = asyncHandler(async (req, res, next) => {
   const codeExpiry = new Date(Date.now() + 2 * 60 * 1000);
   user.codeExpiry = codeExpiry;
   await user.save();
-  await Citizen.updateOne(
+  await User.updateOne(
     { email },
     { confirmEmail: true, $unset: { confirmEmailOTP: 0 } }
   );
@@ -47,7 +50,7 @@ export const confirmEmail = asyncHandler(async (req, res, next) => {
 
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await Citizen.findOne({ email});
+  const user = await User.findOne({ email});
   if (!user) {
     return next(new Error("User not found", { cause: 404 }));
   }
