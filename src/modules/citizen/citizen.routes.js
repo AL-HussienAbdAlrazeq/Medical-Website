@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createCitizen, deleteCitizen, findAllCitizen, findCitizenByID, findCitizenNationalID, updateCitizen } from "./citizen.controller.js";
 import { validation } from "../../middleware/validation.middleware.js";
-import { createCitizenValidation, updateCitizenValidation } from "./citizen.validation.js";
+import { createCitizenValidation, deleteCitizenValidation, updateCitizenValidation } from "./citizen.validation.js";
 import { isAuthenticate, isAuthorized } from "../../middleware/auth.middleware.js";
 import { roles } from "../../Database/models/user.model.js";
 
@@ -14,8 +14,8 @@ citizenRouter.post('/create-citizen', isAuthenticate, isAuthorized(roles.DOCTOR)
 citizenRouter.get('/search', isAuthenticate, findCitizenNationalID)
 // citizenRouter.get('/:id', findCitizenByID)
 
-citizenRouter.patch('/update-citizen/:id', validation(updateCitizenValidation),isAuthenticate,isAuthorized(roles.DOCTOR,roles.ADMIN), updateCitizen)
-citizenRouter.delete('/delete-citizen/:id', isAuthenticate,isAuthorized(roles.ADMIN),deleteCitizen)
+citizenRouter.patch('/update-citizen/:id', isAuthenticate, isAuthorized(roles.DOCTOR, roles.ADMIN), validation(updateCitizenValidation), updateCitizen)
+citizenRouter.delete('/delete-citizen/:national_ID', isAuthenticate, isAuthorized(roles.ADMIN), validation(deleteCitizenValidation),deleteCitizen)
 
 
 

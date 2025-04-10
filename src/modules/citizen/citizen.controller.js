@@ -76,12 +76,13 @@ export const updateCitizen = asyncHandler(async (req, res, next) => {
 
 
 export const deleteCitizen = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const citizen = await Citizen.findByIdAndDelete(id);
-
+  const { national_ID } = req.params;
+  const citizen = await Citizen.findOne({ national_ID });
   if (!citizen) {
-    return next(new Error("Citizen not found"));
+    return next(new Error("Citizen not found", { cause: 404 }));
   }
+
+  await Citizen.findOneAndDelete({ national_ID });
 
   return res.status(200).json({ message: "Citizen Deleted Successfully", citizen });
 });

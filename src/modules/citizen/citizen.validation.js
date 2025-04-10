@@ -89,3 +89,19 @@ export const updateCitizenValidation = Joi.object({
       'any.invalid': 'ID is not a valid ObjectId.',
     }),
 }).required();
+
+
+export const deleteCitizenValidation = Joi
+  .object({
+    national_ID: Joi.string()
+      .length(14)
+      .pattern(/^[0-9]+$/) // Must be all digits
+      .required()
+      .messages({
+        "string.base": "national_ID must be a string.",
+        "string.length": "national_ID must be exactly 14 digits.",
+        "string.pattern.base": "national_ID must contain only numbers.",
+        "any.required": "national_ID is required."
+      }),
+  })
+  .required();
