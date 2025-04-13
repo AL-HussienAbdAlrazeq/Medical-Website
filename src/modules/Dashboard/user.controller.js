@@ -20,11 +20,11 @@ export const dashboard = asyncHandler(async (req, res, next) => {
 
 export const changeRole = asyncHandler(async (req, res, next) => {
     const { role } = req.body
-    const { id } = req.params
+    const { email } = req.body
 
-    const changeRole = req.user.role === roles.SUPERADMIN
-        ? { role: { $nin: [roles.SUPERADMIN] } }
-        : { role: { $nin: [roles.ADMIN, roles.SUPERADMIN] } }
+    // const changeRole = req.user.role === roles.SUPERADMIN
+    //     ? { role: { $nin: [roles.SUPERADMIN] } }
+    //     : { role: { $nin: [roles.ADMIN, roles.SUPERADMIN] } }
 
     //   const user = await User.findOneAndUpdate(
     //     { national_ID: national_ID, ...changeRole },
@@ -33,7 +33,7 @@ export const changeRole = asyncHandler(async (req, res, next) => {
     //   )
 
 
-    const user = await User.findByIdAndUpdate({ _id: id, ...changeRole },
+    const user = await User.findOneAndUpdate({ email },
         { role },
         { new: true }
     )
