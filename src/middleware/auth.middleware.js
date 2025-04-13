@@ -16,7 +16,11 @@ export const isAuthenticate = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "invalid bearer key" });
     }
-
+    if (!authorization) {
+      return res
+        .status(400)
+        .json({ success: false, message: "invalid token" });
+    }
     const token = authorization.split(" ")[1]; // [Bearer,token]
 
     //  check token
