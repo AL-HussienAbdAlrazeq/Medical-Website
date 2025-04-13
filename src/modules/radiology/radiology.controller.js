@@ -47,7 +47,7 @@ export const findAllRadiology = asyncHandler(async (req, res, next) => {
 //  Get Single Radiology Record by ID
 export const findRadiologyByID = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
-  const radiology = await Radiology.findOne({ national_ID })
+  const radiology = await Radiology.find({ national_ID })
   // .populate('national_ID', 'full_name national_ID address blood_type') // Select specific fields
   // .select('-createdAt -updatedAt -__v');
 

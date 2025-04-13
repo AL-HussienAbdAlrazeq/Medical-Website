@@ -13,6 +13,7 @@ import {
 
 const authRouter = Router();
 
+
 authRouter.post("/signup", validation(registerVal), signup);
 authRouter.post(
   "/confirm-email",

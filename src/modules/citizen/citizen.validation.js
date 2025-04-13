@@ -68,27 +68,24 @@ export const updateCitizenValidation = Joi.object({
   address: Joi.string().optional().messages({
     'string.base': 'Address must be a string.',
   }),
-  blood_type: Joi.string().valid('A', 'B', 'AB', 'O').optional().messages({
+  blood_type: Joi.string().valid('A', 'B', 'AB', 'O', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+', 'O-', 'O+').optional().messages({
     'string.base': 'Blood type must be a string.',
     'any.only': 'Blood type must be one of "A", "B", "AB", or "O".',
   }),
   birth_date: Joi.date().format('YYYY-MM-DD').utc().optional().messages({
     'date.base': 'Birth date must be a valid date.',
   }),
-  id: Joi.string()
-    .custom((value, helpers) => {
-      if (!isValidObjectId(value)) {
-        return helpers.error('any.invalid');
-      }
-      return value;
-    })
+  national_ID: Joi.string()
+    .length(14)
+    .pattern(/^[0-9]+$/) // Must be all digits
     .required()
     .messages({
-      'string.base': 'ID must be a string.',
-      'any.required': 'ID is required.',
-      'any.invalid': 'ID is not a valid ObjectId.',
+      "string.base": "national_ID must be a string.",
+      "string.length": "national_ID must be exactly 14 digits.",
+      "string.pattern.base": "national_ID must contain only numbers.",
+      "any.required": "national_ID is required."
     }),
-}).required();
+})
 
 
 export const deleteCitizenValidation = Joi

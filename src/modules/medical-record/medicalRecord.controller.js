@@ -53,7 +53,7 @@ export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
     return next(new Error("Medical Record not found", { cause: 404 }));
   }
 
-  const citizen = await Citizen.findOne({ national_ID }).select("full_name national_ID -_id");
+  const citizen = await Citizen.find({ national_ID }).select("full_name national_ID -_id");
 
   if (!citizen) {
     return next(new Error("Citizen not found", { cause: 404 }));

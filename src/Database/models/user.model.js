@@ -4,6 +4,7 @@ export const roles = {
     USER: "User",
     ADMIN: "Admin",
     DOCTOR: "Doctor",
+    SUPERADMIN:"SuperAdmin"
 };
 
 export const genders = {

@@ -47,6 +47,7 @@ export const updateMedicalRecordValidation = joi
       }),
     clinic_name: joi.string().min(3).max(255).optional(),
     clinic_code: joi.number().integer().optional(),
+    status: joi.boolean().optional()
   })
   .required();
 

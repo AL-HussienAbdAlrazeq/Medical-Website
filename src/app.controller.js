@@ -6,6 +6,7 @@ import cors from 'cors'
 import { globalErrorHandling } from "./utils/errors/error.response.js";
 import { DBConnection } from "./Database/DBConnection.js";
 import authRouter from "./modules/auth/auth.routes.js";
+import userRouter from "./modules/Dashboard/user.routes.js";
 
 export const bootstrap = (app, express) => {
   app.use(cors())
@@ -13,6 +14,7 @@ export const bootstrap = (app, express) => {
   app.use(express.json());
   DBConnection()
   app.use('/auth', authRouter)
+  app.use('/user', userRouter)
   app.use("/citizens", citizenRouter)
   app.use("/medical-record", medicalRecordRouter)
   app.use('/radiology', radiologyRouter)
