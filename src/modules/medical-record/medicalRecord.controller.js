@@ -5,7 +5,7 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { treatment, diagnosis, record_date, national_ID, clinic_name, clinic_code , status } = req.body;
+  const { treatment, diagnosis, record_date, national_ID, clinic_name, clinic_code, status } = req.body;
 
   const citizen = await Citizen.findOne({ national_ID });
 
@@ -46,7 +46,7 @@ export const findMedicalRecord = asyncHandler(async (req, res, next) => {
 
 export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
-  const medicalRecord = await MedicalRecord.findOne({ national_ID })
+  const medicalRecord = await MedicalRecord.find({ national_ID })
 
 
   if (!medicalRecord) {
@@ -59,16 +59,16 @@ export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
     return next(new Error("Citizen not found", { cause: 404 }));
   }
 
-  const result = {
-    ...medicalRecord.toObject(),
-    recode_date: medicalRecord.recode_date.toISOString().split("T")[0],
-    modified_on: medicalRecord.modified_on.toISOString().split("T")[0]
-  };
+  // const result = {
+  //   ...medicalRecord.toObject(),
+  //   recode_date: medicalRecord.recode_date.toISOString().split("T")[0],
+  //   modified_on: medicalRecord.modified_on.toISOString().split("T")[0]
+  // };
 
   return res.status(200).json({
     message: "Medical Record Retrieved Successfully",
     data: {
-      result,
+      medicalRecord,
       citizen
     }
 
