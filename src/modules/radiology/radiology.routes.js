@@ -11,7 +11,7 @@ import { roles } from "../../Database/models/user.model.js";
 const radiologyRouter = Router()
 
 radiologyRouter.post('/create-radiology',
-    isAuthenticate, isAuthorized(roles.DOCTOR),
+    isAuthenticate, isAuthorized(roles.DOCTOR, roles.SUPERADMIN),
     uploadCloudFile(fileTypes.allowedAttachments).array('images', 2),
     validation(createRadiologyValidation),
     createRadiology
@@ -20,13 +20,13 @@ radiologyRouter.post('/create-radiology',
 
 // radiologyRouter.get('/', findAllRadiology)
 radiologyRouter.get('/:national_ID', findRadiologyByID)
-radiologyRouter.patch('/update-citizen/:national_ID',
-    isAuthenticate, isAuthorized(roles.DOCTOR),
+radiologyRouter.patch('/update-citizen/:national_ID/:id',
+    isAuthenticate, isAuthorized(roles.DOCTOR , roles.SUPERADMIN),
     uploadCloudFile(fileTypes.allowedAttachments).array('images', 2),
     validation(updateRadiologyValidation),
     updateRadiology
 )
-radiologyRouter.delete('/delete-citizen/:national_ID', isAuthenticate, isAuthorized(roles.DOCTOR,roles.ADMIN), validation(deleteRadiologyValidation), deleteRadiology)
+radiologyRouter.delete('/delete-citizen/:national_ID/:id', isAuthenticate, isAuthorized(roles.DOCTOR,roles.ADMIN, roles.SUPERADMIN), validation(deleteRadiologyValidation), deleteRadiology)
 
 
 

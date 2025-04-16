@@ -6,7 +6,11 @@ import { isValidObjectId } from "mongoose";
 const Joi = JoiBase.extend(JoiDate);
 
 const schema = Joi.date().format('YYYY-MM-DD').utc().required();
-
+export const isValidObject = (value, helper) => {
+  return Types.ObjectId.isValid(value)
+    ? true
+    : helper.message("In-valid object");
+};
 export const createRadiologyValidation = joi
   .object()
   .keys({
@@ -77,6 +81,8 @@ export const updateRadiologyValidation = joi.object({
     path: joi.string(),
     size: joi.number(),
   }).optional(),
+  id: joi.string().custom(isValidObjectId).required()
+
 });
 
 
@@ -92,4 +98,6 @@ export const deleteRadiologyValidation = joi.object({
       "string.pattern.base": "national_ID must contain only numbers.",
       "any.required": "national_ID is required."
     }),
+  id: joi.string().custom(isValidObjectId).required()
+
 });

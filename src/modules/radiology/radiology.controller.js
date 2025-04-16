@@ -62,7 +62,7 @@ export const findRadiologyByID = asyncHandler(async (req, res, next) => {
 
 //  Update Radiology Record
 export const updateRadiology = asyncHandler(async (req, res, next) => {
-  const { national_ID } = req.params;
+  const { national_ID, id } = req.params;
 
   // Handle file uploads (add images if provided)
   let images = [];
@@ -76,7 +76,7 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
 
   // Find and update the radiology record directly
   const updatedRadiology = await Radiology.findOneAndUpdate(
-    { national_ID },            // Search condition
+    { national_ID, _id: id },            // Search condition
     { $set: req.body },         // Update data
     { new: true }                // Return the updated document
   );
@@ -94,10 +94,14 @@ export const updateRadiology = asyncHandler(async (req, res, next) => {
 
 //  Delete Radiology Record
 export const deleteRadiology = asyncHandler(async (req, res, next) => {
-  const { national_ID } = req.params;
+  const { national_ID, id } = req.params;
+  const radiologies = await Radiology.findOne({ national_ID, _id: id });
+  if (!radiologies) {
+    return next(new Error("Medical Record not found", { cause: 404 }));
+  }
 
   // Find and delete the radiology record in one step
-  const radiology = await Radiology.findOneAndDelete({ national_ID });
+  const radiology = await Radiology.findOneAndDelete({ national_ID, _id: id });
 
   if (!radiology) {
     return next(new Error("Radiology not found", { cause: 404 }));

@@ -4,6 +4,11 @@ import JoiDate from '@joi/date';
 import { isValidObjectId } from "mongoose";
 
 const Joi = JoiBase.extend(JoiDate);
+export const isValidObject = (value, helper) => {
+  return Types.ObjectId.isValid(value)
+    ? true
+    : helper.message("In-valid object");
+};
 
 const schema = Joi.date().format('YYYY-MM-DD').utc().required();
 export const createMedicalRecordValidation = joi
@@ -47,7 +52,8 @@ export const updateMedicalRecordValidation = joi
       }),
     clinic_name: joi.string().min(3).max(255).optional(),
     clinic_code: joi.number().integer().optional(),
-    status: joi.boolean().optional()
+    status: joi.boolean().optional(),
+    id: joi.string().custom(isValidObjectId).required()
   })
   .required();
 
@@ -63,5 +69,6 @@ export const deleteMedicalRecordValidation = joi
         "string.pattern.base": "national_ID must contain only numbers.",
         "any.required": "national_ID is required."
       }),
+    id: joi.string().custom(isValidObjectId).required()
   })
   .required();

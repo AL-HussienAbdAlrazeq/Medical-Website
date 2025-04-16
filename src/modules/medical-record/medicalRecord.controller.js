@@ -77,14 +77,14 @@ export const findMedicalRecordByID = asyncHandler(async (req, res, next) => {
 
 
 export const updateMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { national_ID } = req.params;
+  const { national_ID, id } = req.params;
 
-  const medicalRecord = await MedicalRecord.findOne({ national_ID });
+  const medicalRecord = await MedicalRecord.findOne({ national_ID, _id: id  });
   if (!medicalRecord) {
     return next(new Error("Medical Record not found", { cause: 404 }));
   }
 
-  const updatedRecord = await MedicalRecord.findOneAndUpdate({ national_ID }, req.body, {
+  const updatedRecord = await MedicalRecord.findOneAndUpdate({ national_ID, _id: id }, req.body, {
     new: true,
     runValidators: true,
   });
@@ -97,14 +97,14 @@ export const updateMedicalRecord = asyncHandler(async (req, res, next) => {
 
 
 export const deleteMedicalRecord = asyncHandler(async (req, res, next) => {
-  const { national_ID } = req.params;
+  const { national_ID, id } = req.params;
 
-  const medicalRecord = await MedicalRecord.findOne({ national_ID });
+  const medicalRecord = await MedicalRecord.findOne({ national_ID, _id: id });
   if (!medicalRecord) {
     return next(new Error("Medical Record not found", { cause: 404 }));
   }
 
-  await MedicalRecord.findOneAndDelete({ national_ID });
+  await MedicalRecord.findOneAndDelete({ national_ID, _id: id });
   return res.status(200).json({
     message: "Medical Record Deleted Successfully",
   });
