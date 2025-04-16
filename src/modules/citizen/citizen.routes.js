@@ -8,13 +8,13 @@ import { createCitizenValidation, deleteCitizenValidation, updateCitizenValidati
 
 
 const citizenRouter = Router()
-citizenRouter.post('/create-citizen', isAuthenticate, isAuthorized(roles.DOCTOR), validation(createCitizenValidation), createCitizen)
+citizenRouter.post('/create-citizen', isAuthenticate, isAuthorized(roles.DOCTOR, roles.SUPERADMIN), validation(createCitizenValidation), createCitizen)
 // citizenRouter.get('/', findAllCitizen)
 citizenRouter.get('/search', isAuthenticate, findCitizenNationalID)
 // citizenRouter.get('/:id', findCitizenByID)
 
-citizenRouter.patch('/update-citizen/:national_ID', isAuthenticate, isAuthorized(roles.DOCTOR, roles.ADMIN), validation(updateCitizenValidation), updateCitizen)
-citizenRouter.delete('/delete-citizen/:national_ID', isAuthenticate, isAuthorized(roles.ADMIN), validation(deleteCitizenValidation),deleteCitizen)
+citizenRouter.patch('/update-citizen/:national_ID', isAuthenticate, isAuthorized(roles.DOCTOR, roles.ADMIN, roles.SUPERADMIN), validation(updateCitizenValidation), updateCitizen)
+citizenRouter.delete('/delete-citizen/:national_ID', isAuthenticate, isAuthorized(roles.ADMIN, roles.SUPERADMIN), validation(deleteCitizenValidation), deleteCitizen)
 
 
 

@@ -7,7 +7,7 @@ import { asyncHandler } from "../../utils/errors/error.response.js";
 
 
 export const createCitizen = asyncHandler(async (req, res, next) => {
-  const { national_ID, full_name, address, blood_type, birth_date, mobileNumber,gender } = req.body;
+  const { national_ID, full_name, address, blood_type, birth_date, mobileNumber, gender } = req.body;
 
   if (!national_ID || !full_name || !address || !blood_type || !birth_date) {
     return res.status(400).json({ error: 'All fields are required' });
@@ -23,7 +23,7 @@ export const createCitizen = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ error: "Citizen with this National ID already exists." });
   }
 
-  const citizen = await Citizen.create({ national_ID, full_name, address, blood_type, birth_date, mobileNumber,gender });
+  const citizen = await Citizen.create({ national_ID, full_name, address, blood_type, birth_date, mobileNumber, gender });
   return res.status(201).json({ message: "Citizen Created Successfully", citizen });
 });
 
@@ -68,7 +68,7 @@ export const findCitizenNationalID = asyncHandler(async (req, res, next) => {
 
 export const updateCitizen = asyncHandler(async (req, res, next) => {
   const { national_ID } = req.params;
-  const citizen = await Citizen.findOneAndUpdate(national_ID, req.body, { new: true });
+  const citizen = await Citizen.findOneAndUpdate({ national_ID }, req.body, { new: true });
 
   if (!citizen) {
     return next(new Error("Citizen not found"));
