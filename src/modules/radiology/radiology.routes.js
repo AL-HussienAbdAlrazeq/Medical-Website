@@ -20,13 +20,13 @@ radiologyRouter.post('/create-radiology',
 
 // radiologyRouter.get('/', findAllRadiology)
 radiologyRouter.get('/:national_ID', findRadiologyByID)
-radiologyRouter.patch('/update-citizen/:national_ID/:id',
+radiologyRouter.patch('/update-radiology/:national_ID/:id',
     isAuthenticate, isAuthorized(roles.DOCTOR , roles.SUPERADMIN),
     uploadCloudFile(fileTypes.allowedAttachments).array('images', 2),
     validation(updateRadiologyValidation),
     updateRadiology
 )
-radiologyRouter.delete('/delete-citizen/:national_ID/:id', isAuthenticate, isAuthorized(roles.DOCTOR,roles.ADMIN, roles.SUPERADMIN), validation(deleteRadiologyValidation), deleteRadiology)
+radiologyRouter.delete('/delete-radiology/:national_ID/:id', isAuthenticate, isAuthorized(roles.DOCTOR,roles.ADMIN, roles.SUPERADMIN), validation(deleteRadiologyValidation), deleteRadiology)
 
 
 
